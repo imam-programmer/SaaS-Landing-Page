@@ -14,7 +14,7 @@ export default function Home() {
             <Badge>Introducing FlowSync 2.0</Badge>
 
             <h1 className="mt-8 max-w-4xl text-5xl font-bold leading-tight tracking-tight sm:text-6xl lg:text-7xl">
-              Your team's work.
+              Your team&apos;s work.
               <span className="block bg-linear-to-r from-primary to-secondary bg-clip-text text-transparent">
                 One powerful workspace.
               </span>
