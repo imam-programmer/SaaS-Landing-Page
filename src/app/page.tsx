@@ -1,8 +1,13 @@
 import { Navbar } from "@/components/layout/Navbar";
+import { Footer } from "@/components/layout/Footer";
 import { Hero } from "@/components/sections/Hero";
 import { LogosStrip } from "@/components/sections/LogosStrip";
 import { Features } from "@/components/sections/Features";
 import { HowItWorks } from "@/components/sections/HowItWorks";
+import { Pricing } from "@/components/sections/Pricing";
+import { Testimonials } from "@/components/sections/Testimonials";
+import { FAQ } from "@/components/sections/FAQ";
+import { CTA } from "@/components/sections/CTA";
 
 export default function Home() {
   return (
@@ -13,18 +18,12 @@ export default function Home() {
         <LogosStrip />
         <Features />
         <HowItWorks />
-
-        {/* Temporary placeholders, we'll replace these in later steps */}
-        {["pricing", "testimonials", "faq"].map((id) => (
-          <section
-            key={id}
-            id={id}
-            className="flex h-[60vh] items-center justify-center border-t border-slate-100 text-2xl font-semibold capitalize text-slate-400"
-          >
-            {id}
-          </section>
-        ))}
+        <Pricing />
+        <Testimonials />
+        <FAQ />
+        <CTA />
       </main>
+      <Footer />
     </>
   );
 }
