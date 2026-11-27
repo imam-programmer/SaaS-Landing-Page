@@ -1,34 +1,14 @@
 @import "tailwindcss";
 
-:root {
-  --background: #0b0d1a;
-  --foreground: #f8fafc;
+@theme {
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #e0e7ff;
+  --color-brand-400: #818cf8;
+  --color-brand-500: #6366f1;
+  --color-brand-600: #4f46e5;
+  --color-brand-700: #4338ca;
 
-  --surface: #13162a;
-  --surface-light: #1b1f38;
-
-  --primary: #7958f5;
-  --primary-hover: #6844e8;
-
-  --secondary: #a78bfa;
-  --muted: #9297ad;
-  --border: #292d46;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-surface: var(--surface);
-  --color-surface-light: var(--surface-light);
-  --color-primary: var(--primary);
-  --color-primary-hover: var(--primary-hover);
-  --color-secondary: var(--secondary);
-  --color-muted: var(--muted);
-  --color-border: var(--border);
-}
-
-* {
-  box-sizing: border-box;
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
 }
 
 html {
@@ -36,12 +16,9 @@ html {
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-white text-slate-900 antialiased;
 }
-
-button,
-a {
-  -webkit-tap-highlight-color: transparent;
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }

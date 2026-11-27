@@ -1,332 +1,114 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useState } from "react";
-import Container from "../ui/Container";
-import Button from "../ui/Button";
+import { Menu, X, Workflow } from "lucide-react";
+import { Container } from "@/components/ui/Container";
+import { Button } from "@/components/ui/Button";
+import { cn } from "@/lib/utils";
 
-type DropdownName = "features" | "resources" | null;
+const navLinks = [
+  { label: "Features", href: "#features" },
+  { label: "How it works", href: "#how-it-works" },
+  { label: "Pricing", href: "#pricing" },
+  { label: "Testimonials", href: "#testimonials" },
+  { label: "FAQ", href: "#faq" },
+];
 
-export default function Navbar() {
-  const [activeDropdown, setActiveDropdown] =
-    useState<DropdownName>(null);
+export function Navbar() {
+  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
 
-  const [isMobileMenuOpen, setIsMobileMenuOpen] =
-    useState(false);
+  // Add glass effect after the user scrolls a little
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 10);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
-  const closeMenus = () => {
-    setActiveDropdown(null);
-    setIsMobileMenuOpen(false);
-  };
-
-  const toggleDropdown = (name: Exclude<DropdownName, null>) => {
-    setActiveDropdown((current) =>
-      current === name ? null : name
-    );
-  };
+  // Lock body scroll while the mobile menu is open
+  useEffect(() => {
+    document.body.style.overflow = open ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [open]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/85 backdrop-blur-xl">
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300",
+        scrolled || open
+          ? "border-b border-slate-200/70 bg-white/80 backdrop-blur-xl"
+          : "bg-transparent"
+      )}
+    >
+      <Container className="flex h-16 items-center justify-between">
+        {/* Logo */}
+        <Link href="/" className="flex items-center gap-2 font-bold text-slate-900">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white">
+            <Workflow size={18} />
+          </span>
+          FlowDesk
+        </Link>
 
-      <Container>
-        <nav
-          className="flex h-20 items-center justify-between"
-          aria-label="Main navigation"
-        >
-
-          {/* Logo */}
-          <Link
-            href="/"
-            onClick={closeMenus}
-            className="flex items-center gap-3"
-          >
-            <span className="grid size-10 place-items-center rounded-xl bg-gradient-to-br from-primary to-secondary text-xl font-bold text-white shadow-lg shadow-primary/20">
-              F
-            </span>
-
-            <span className="text-xl font-bold tracking-tight">
-              FlowSync
-            </span>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden items-center gap-8 md:flex">
-
-            {/* Features Dropdown */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => toggleDropdown("features")}
-                aria-expanded={activeDropdown === "features"}
-                aria-controls="features-menu"
-                className="flex items-center gap-2 text-sm font-medium text-muted transition hover:text-white"
-              >
-                Features
-                <span aria-hidden="true">⌄</span>
-              </button>
-
-              {activeDropdown === "features" && (
-                <div
-                  id="features-menu"
-                  className="absolute left-0 top-full mt-4 w-64 rounded-xl border border-border bg-surface p-3 shadow-2xl"
-                >
-                  <Link
-                    href="/features"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    All Features
-                    <span className="mt-1 block text-xs text-muted">
-                      Explore everything FlowSync offers
-                    </span>
-                  </Link>
-
-                  <Link
-                    href="/features#collaboration"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    Team Collaboration
-                  </Link>
-
-                  <Link
-                    href="/features#analytics"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    Analytics
-                  </Link>
-                </div>
-              )}
-            </div>
-
-            <Link
-              href="/pricing"
-              className="text-sm font-medium text-muted transition hover:text-white"
+        {/* Desktop links */}
+        <nav className="hidden items-center gap-8 md:flex">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              className="text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"
             >
-              Pricing
-            </Link>
-
-            {/* Resources Dropdown */}
-            <div className="relative">
-              <button
-                type="button"
-                onClick={() => toggleDropdown("resources")}
-                aria-expanded={activeDropdown === "resources"}
-                aria-controls="resources-menu"
-                className="flex items-center gap-2 text-sm font-medium text-muted transition hover:text-white"
-              >
-                Resources
-                <span aria-hidden="true">⌄</span>
-              </button>
-
-              {activeDropdown === "resources" && (
-                <div
-                  id="resources-menu"
-                  className="absolute left-0 top-full mt-4 w-52 rounded-xl border border-border bg-surface p-3 shadow-2xl"
-                >
-                  <Link
-                    href="/blog"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    Blog
-                  </Link>
-
-                  <Link
-                    href="/about"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    About Us
-                  </Link>
-
-                  <Link
-                    href="/contact"
-                    onClick={closeMenus}
-                    className="block rounded-lg p-3 text-sm text-white hover:bg-surface-light"
-                  >
-                    Help & Contact
-                  </Link>
-                </div>
-              )}
-            </div>
-
-          </div>
-
-          {/* Desktop CTA */}
-          <div className="hidden items-center gap-5 md:flex">
-
-            <Link
-              href="/contact"
-              className="text-sm font-medium text-muted transition hover:text-white"
-            >
-              Talk to Sales
-            </Link>
-
-            <Link href="/pricing">
-              <Button size="md">
-                Get Started
-              </Button>
-            </Link>
-
-          </div>
-
-          {/* Mobile Menu Button */}
-          <button
-            type="button"
-            onClick={() =>
-              setIsMobileMenuOpen((current) => !current)
-            }
-            aria-label={
-              isMobileMenuOpen
-                ? "Close navigation menu"
-                : "Open navigation menu"
-            }
-            aria-expanded={isMobileMenuOpen}
-            aria-controls="mobile-navigation"
-            className="flex size-11 flex-col items-center justify-center gap-1.5 rounded-lg border border-border md:hidden"
-          >
-            <span
-              className={`h-0.5 w-5 bg-white transition ${
-                isMobileMenuOpen ? "translate-y-2 rotate-45" : ""
-              }`}
-            />
-
-            <span
-              className={`h-0.5 w-5 bg-white transition ${
-                isMobileMenuOpen ? "opacity-0" : ""
-              }`}
-            />
-
-            <span
-              className={`h-0.5 w-5 bg-white transition ${
-                isMobileMenuOpen
-                  ? "-translate-y-2 -rotate-45"
-                  : ""
-              }`}
-            />
-          </button>
-
+              {link.label}
+            </a>
+          ))}
         </nav>
 
-        {/* Mobile Navigation */}
-        {isMobileMenuOpen && (
-          <div
-            id="mobile-navigation"
-            className="border-t border-border py-5 md:hidden"
+        {/* Desktop CTAs */}
+        <div className="hidden items-center gap-3 md:flex">
+          <a
+            href="#"
+            className="text-sm font-medium text-slate-600 hover:text-slate-900"
           >
-            <div className="flex flex-col gap-2">
+            Log in
+          </a>
+          <Button className="px-5 py-2.5">Get started</Button>
+        </div>
 
-              <button
-                type="button"
-                onClick={() => toggleDropdown("features")}
-                aria-expanded={activeDropdown === "features"}
-                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium text-white hover:bg-surface"
-              >
-                Features
-                <span aria-hidden="true">⌄</span>
-              </button>
-
-              {activeDropdown === "features" && (
-                <div className="ml-4 flex flex-col border-l border-border pl-4">
-                  <Link
-                    href="/features"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    All Features
-                  </Link>
-
-                  <Link
-                    href="/features#collaboration"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    Team Collaboration
-                  </Link>
-
-                  <Link
-                    href="/features#analytics"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    Analytics
-                  </Link>
-                </div>
-              )}
-
-              <Link
-                href="/pricing"
-                onClick={closeMenus}
-                className="rounded-lg px-4 py-3 text-sm font-medium text-white hover:bg-surface"
-              >
-                Pricing
-              </Link>
-
-              <button
-                type="button"
-                onClick={() => toggleDropdown("resources")}
-                aria-expanded={activeDropdown === "resources"}
-                className="flex items-center justify-between rounded-lg px-4 py-3 text-left text-sm font-medium text-white hover:bg-surface"
-              >
-                Resources
-                <span aria-hidden="true">⌄</span>
-              </button>
-
-              {activeDropdown === "resources" && (
-                <div className="ml-4 flex flex-col border-l border-border pl-4">
-                  <Link
-                    href="/blog"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    Blog
-                  </Link>
-
-                  <Link
-                    href="/about"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    About Us
-                  </Link>
-
-                  <Link
-                    href="/contact"
-                    onClick={closeMenus}
-                    className="rounded-lg px-4 py-3 text-sm text-muted hover:text-white"
-                  >
-                    Contact
-                  </Link>
-                </div>
-              )}
-
-              <div className="mt-4 flex flex-col gap-3 border-t border-border pt-5">
-                <Link
-                  href="/contact"
-                  onClick={closeMenus}
-                  className="rounded-lg px-4 py-3 text-sm font-medium text-muted"
-                >
-                  Talk to Sales
-                </Link>
-
-                <Link
-                  href="/pricing"
-                  onClick={closeMenus}
-                  className="px-4"
-                >
-                  <Button size="lg" className="w-full">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-
-            </div>
-          </div>
-        )}
-
+        {/* Mobile toggle */}
+        <button
+          onClick={() => setOpen((v) => !v)}
+          aria-label={open ? "Close menu" : "Open menu"}
+          aria-expanded={open}
+          className="rounded-lg p-2 text-slate-700 hover:bg-slate-100 md:hidden"
+        >
+          {open ? <X size={22} /> : <Menu size={22} />}
+        </button>
       </Container>
+
+      {/* Mobile menu */}
+      <div
+        className={cn(
+          "overflow-hidden md:hidden transition-[max-height] duration-300 ease-in-out",
+          open ? "max-h-[28rem]" : "max-h-0"
+        )}
+      >
+        <Container className="flex flex-col gap-1 pb-6 pt-2">
+          {navLinks.map((link) => (
+            <a
+              key={link.href}
+              href={link.href}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-3 text-base font-medium text-slate-700 hover:bg-slate-100"
+            >
+              {link.label}
+            </a>
+          ))}
+          <Button className="mt-3 w-full">Get started</Button>
+        </Container>
+      </div>
     </header>
   );
 }

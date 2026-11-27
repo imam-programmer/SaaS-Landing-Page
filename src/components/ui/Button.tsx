@@ -1,46 +1,25 @@
-import type {
-  ButtonHTMLAttributes,
-} from "react";
+import { cn } from "@/lib/utils";
 
-interface ButtonProps
-  extends ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "outline";
-  size?: "sm" | "md" | "lg";
-}
+type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+  variant?: "primary" | "secondary";
+};
 
-export default function Button({
-  children,
+export function Button({
   variant = "primary",
-  size = "md",
-  className = "",
+  className,
   ...props
 }: ButtonProps) {
-  const baseStyles =
-    "inline-flex items-center justify-center rounded-xl font-semibold transition-all duration-300 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary disabled:cursor-not-allowed disabled:opacity-50";
-
-  const variants = {
-    primary:
-      "bg-primary text-white hover:bg-primary-hover shadow-lg shadow-primary/20",
-
-    secondary:
-      "bg-surface-light text-white hover:bg-[#252a48]",
-
-    outline:
-      "border border-border text-white hover:bg-surface-light",
-  };
-
-  const sizes = {
-    sm: "px-4 py-2 text-sm",
-    md: "px-5 py-3 text-sm",
-    lg: "px-7 py-4 text-base",
-  };
-
   return (
     <button
-      className={`${baseStyles} ${variants[variant]} ${sizes[size]} ${className}`}
+      className={cn(
+        "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-all duration-200 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-600",
+        variant === "primary" &&
+          "bg-brand-600 text-white shadow-lg shadow-brand-600/25 hover:bg-brand-700 hover:-translate-y-0.5",
+        variant === "secondary" &&
+          "border border-slate-200 bg-white text-slate-900 hover:bg-slate-50",
+        className
+      )}
       {...props}
-    >
-      {children}
-    </button>
+    />
   );
 }

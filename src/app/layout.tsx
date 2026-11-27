@@ -1,24 +1,23 @@
 import type { Metadata } from "next";
-import Navbar from "@/components/layout/Navbar";
+import { Inter } from "next/font/google";
 import "./globals.css";
 
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+
 export const metadata: Metadata = {
-  title: "FlowSync | Project Management",
+  title: "FlowDesk - Project Management for Modern Teams",
   description:
-    "Manage projects and collaborate with your team.",
+    "Plan, track, and ship work faster with FlowDesk, the all-in-one workspace for high-performing teams.",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en">
-      <body>
-        <Navbar />
-        {children}
-      </body>
+    <html lang="en" className={inter.variable}>
+      <body className="font-sans">{children}</body>
     </html>
   );
 }
